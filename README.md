@@ -2,4 +2,13 @@
 
 This is a template project for python.
 
-## TODO
+## Roadmap
+
+- [ ] Create `docker` environment
+- [ ] Add `CI/CD`
+- [ ] Build coding style checker for python
+- [ ] Build unit tests for CI/CD 
+
+## License
+
+[MIT License](LICENSE)
