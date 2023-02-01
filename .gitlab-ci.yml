@@ -35,6 +35,6 @@ release:
     - "docker"
   stage: deploy
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev2"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "dev2" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
   script:
     - echo "main release"
