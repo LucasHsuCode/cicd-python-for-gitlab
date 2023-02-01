@@ -13,15 +13,15 @@ This is a template project for python.
 
 ```graph
 .
-+-- main
-+-- dev2
++-- main (release branch)
++-- dev2 (develop branch)
 ```
 
-- main: release branch
-- dev2: develop branch
-  1. Create `dev2` branch
-  2. Go to **Settings > Repository** and expand **Protected branches**
-  3. Add `dev2` branch to protect it
+### Protected branches
+1. Create `dev2` branch
+2. Go to **Settings > Repository** and expand **Protected branches**
+3. Add `dev2` branch to protect it
+4. Set **"No One"** in  **"Allowed to push"** of `main` and `dev2` 
 
 ### Merge checks
 
@@ -97,22 +97,24 @@ Reference
 > When registering runner, but the following error message is shown such as
 >
 > - Error 1
-    >   > ERROR: Registering runner... failed runner=GR1348941vx8VF3qb status=couldn't execute POST
-    > > against https://cri-gitlab.cri.lab/api/v4/runners: Post "https://cri-gitlab.cri.lab/api/v4/runners": x509:
-    > > certificate is valid for synology, not cri-gitlab.cri.lab  
-    > > PANIC: Failed to register the runner.
-    >
-    >   Replacing `https` with `http` solves the problem.
+> 
+> > ERROR: Registering runner... failed runner=GR1348941vx8VF3qb status=couldn't execute POST
+> > against https://cri-gitlab.cri.lab/api/v4/runners: Post "https://cri-gitlab.cri.lab/api/v4/runners": x509:
+> > certificate is valid for synology, not cri-gitlab.cri.lab  
+> > PANIC: Failed to register the runner.
+>
+>   Replacing `https` with `http` solves the problem.
 >
 > - Error 2
-    >   > ERROR: Registering runner... failed runner=xxx status=couldn't execute POST
-    > > against https://192.168.72.6:8443/api/v4/runners: Post "https://192.168.72.6:8443/api/v4/runners": x509: cannot
-    > > validate certificate for 192.168.72.6 because it doesn't contain any IP SANs  
-    > > PANIC: Failed to register the runner.
-    >
-    >   Execute following command,
-    >
-    >   ```bash
+> 
+>   > ERROR: Registering runner... failed runner=xxx status=couldn't execute POST
+>   > against https://192.168.72.6:8443/api/v4/runners: Post "https://192.168.72.6:8443/api/v4/runners": x509: cannot
+>   > validate certificate for 192.168.72.6 because it doesn't contain any IP SANs  
+>   > PANIC: Failed to register the runner.
+>
+>   Execute following command,
+>
+>   ```bash
 >   $ export GITLAB_SERVER="cri-gitlab.cri.lab"
 >   $ export GITLAB_PORT="443"
 >   $ export GITLAB_URL=https://${GITLAB_SERVER}:${GITLAB_PORT}/
@@ -143,13 +145,12 @@ Reference
 >         --tag-list "docker" \
 >         --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
 >         --docker-disable-cache=true 
->   ```  
+>   ``` 
 >
 > Reference:
 > - https://stackoverflow.com/questions/44458410/gitlab-ci-runner-ignore-self-signed-certificate
 > - https://docs.gitlab.com/runner/configuration/tls-self-signed.html
 > - https://gitlab.com/gitlab-org/gl-openshift/gitlab-runner-operator/-/issues/56
->
 
 [Top](#cicd-python-for-gitlab)
 
