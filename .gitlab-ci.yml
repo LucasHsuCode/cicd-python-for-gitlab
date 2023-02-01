@@ -1,0 +1,31 @@
+stages:
+  - build
+  - deploy
+  - test
+
+dev-build:
+  tags:
+    - "docker"
+  stage: build
+  only:
+    - dev
+  script:
+    - echo "dev build"
+
+dev-deploy:
+  tags:
+    - "docker"
+  stage: deploy
+  only:
+    - dev
+  script:
+    - echo "dev deploy"
+
+dev-test:
+  tags:
+    - "docker"
+  stage: test
+  only:
+    - dev
+  script:
+    - echo "dev testing"
