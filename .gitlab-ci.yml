@@ -8,7 +8,7 @@ dev-build:
     - "docker"
   stage: build
   only:
-    - dev
+    - dev2
   script:
     - echo "dev build"
 
@@ -17,7 +17,7 @@ dev-deploy:
     - "docker"
   stage: deploy
   only:
-    - dev
+    - dev2
   script:
     - echo "dev deploy"
 
@@ -26,6 +26,6 @@ dev-test:
     - "docker"
   stage: test
   only:
-    - dev
+    - dev2
   script:
     - echo "dev testing"
