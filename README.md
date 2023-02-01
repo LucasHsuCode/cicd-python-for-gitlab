@@ -186,6 +186,8 @@ $ pytest tests/tests.py --doctest-modules --cov=. --cov-report=xml --cov-report=
 - [ ] Create `docker` environment
 - [x] Build coding style checker for python
 - [x] Build unit tests for CI/CD
+- [ ] Add coding style checker in `CI/CD`
+- [ ] Add unit tests in `CI/CD`
 
 [Top](#cicd-python-for-gitlab)
 
