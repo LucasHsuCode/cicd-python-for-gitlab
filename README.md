@@ -19,6 +19,19 @@ This is a template project for python.
 
 - main: release branch
 - dev2: develop branch
+  1. Create `dev2` branch
+  2. Go to **Settings > Repository** and expand **Protected branches**
+  3. Add `dev2` branch to protect it
+
+### Merge checks
+
+1. Go to **Settings > Repository**
+2. Under Merge checks
+    - Select the **"Pipelines must succeed"** checkbox
+    - Select the **"All threads must be resolved"** checkbox
+3. Select Save changes
+
+[Top](#cicd-python-for-gitlab)
 
 ## GitLab Runner
 
@@ -58,7 +71,7 @@ This is a template project for python.
       $ docker exec -it $DOCKER_NAME gitlab-runner unregister --name $RUNNER_NAME
       ```
       > If you have already removed the runner from the GitLab instance then that won’t work and you’ll get an error.
-      However, this can be easily resolved using the following command. 
+      However, this can be easily resolved using the following command.
       ```bash
       $ docker exec -it gitlab-runner gitlab-runner verify --delete
       ```
@@ -78,28 +91,28 @@ This is a template project for python.
       ```
 
 Reference
+
 - https://datawookie.dev/blog/2021/03/install-gitlab-runner-with-docker/
 
-
 > When registering runner, but the following error message is shown such as
-> 
+>
 > - Error 1
->   >ERROR: Registering runner... failed runner=GR1348941vx8VF3qb status=couldn't execute POST 
->   >against https://cri-gitlab.cri.lab/api/v4/runners: Post "https://cri-gitlab.cri.lab/api/v4/runners": x509: 
->   >certificate is valid for synology, not cri-gitlab.cri.lab  
->   >PANIC: Failed to register the runner.
+    >   > ERROR: Registering runner... failed runner=GR1348941vx8VF3qb status=couldn't execute POST
+    > > against https://cri-gitlab.cri.lab/api/v4/runners: Post "https://cri-gitlab.cri.lab/api/v4/runners": x509:
+    > > certificate is valid for synology, not cri-gitlab.cri.lab  
+    > > PANIC: Failed to register the runner.
+    >
+    >   Replacing `https` with `http` solves the problem.
 >
->   Replacing `https` with `http` solves the problem. 
-> 
 > - Error 2
->   > ERROR: Registering runner... failed runner=xxx status=couldn't execute POST
->   > against https://192.168.72.6:8443/api/v4/runners: Post "https://192.168.72.6:8443/api/v4/runners": x509: cannot
->   > validate certificate for 192.168.72.6 because it doesn't contain any IP SANs  
->   > PANIC: Failed to register the runner.
->
->   Execute following command,
->
->   ```bash
+    >   > ERROR: Registering runner... failed runner=xxx status=couldn't execute POST
+    > > against https://192.168.72.6:8443/api/v4/runners: Post "https://192.168.72.6:8443/api/v4/runners": x509: cannot
+    > > validate certificate for 192.168.72.6 because it doesn't contain any IP SANs  
+    > > PANIC: Failed to register the runner.
+    >
+    >   Execute following command,
+    >
+    >   ```bash
 >   $ export GITLAB_SERVER="cri-gitlab.cri.lab"
 >   $ export GITLAB_PORT="443"
 >   $ export GITLAB_URL=https://${GITLAB_SERVER}:${GITLAB_PORT}/
