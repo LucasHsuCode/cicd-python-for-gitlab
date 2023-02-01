@@ -2,11 +2,23 @@
 
 This is a template project for python.
 
+- [Project Branch Architecture](#project-branch-architecture)
 - [GitLab Runner](#gitlab-runner)
 - [Coding Style Checker](#coding-style-checker)
 - [Unit Tests](#unit-tests)
 - [Roadmap](#roadmap)
 - [License](#license)
+
+## Project Branch Architecture
+
+```graph
+.
++-- main
++-- dev2
+```
+
+- main: release branch
+- dev2: develop branch
 
 ## GitLab Runner
 
