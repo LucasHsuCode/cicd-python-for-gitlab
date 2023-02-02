@@ -59,7 +59,11 @@ release:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "dev2" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
   script:
-    - echo "main release"
+    - echo "running release for $TAG"
+  release: # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
+    tag_name: 'v0.$CI_PIPELINE_IID'                # The version is incremented per pipeline.
+    description: 'v0.$CI_PIPELINE_IID'
+    ref: '$CI_COMMIT_SHA'                          # The tag is created from the pipeline SHA.
 
 #test:run_on_gpu0:
 #  image: tensorflow/tensorflow:latest-gpu
