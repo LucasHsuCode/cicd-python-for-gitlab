@@ -4,13 +4,35 @@ stages:
   - test
 
 dev-build:
+  image: ${DOCKER_IMAGE}
   tags:
     - "docker"
   stage: build
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev2"
+  before_script:
+    - echo "prepare build env"
+    - python -m pip install --upgrade pip
+    - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - pip install flake8 pylint pylint-pytest
   script:
-    - echo "dev build"
+    - echo "dev build ${DOCKER_IMAGE}"
+    - echo "coding style checker"
+    - |
+      # exit-zero treats all errors as warnings. The GitHub editor is 120 chars wide
+      flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+    - |
+      # check style
+      pylint examples/
+      pylint --load-plugins pylint_pytest tests/
+    - pytest tests/tests.py --doctest-modules --cov=. --cov-report=html #--cov-report=xml
+  artifacts:
+    paths:
+      - htmlcov/
+    expire_in: 1 week
+  parallel:
+    matrix:
+      - DOCKER_IMAGE: [ "python:3.7", "python:3.8", "python:3.9", "python:3.10"]
 
 dev-deploy:
   tags:
@@ -38,3 +60,36 @@ release:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "dev2" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
   script:
     - echo "main release"
+
+#test:run_on_gpu0:
+#  image: tensorflow/tensorflow:latest-gpu
+#  stage: test
+#  script:
+#    - echo NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES}
+#    - echo NVIDIA_DRIVER_CAPABILITIES=${NVIDIA_DRIVER_CAPABILITIES}
+#    - nvidia-smi
+#    - python -c "import tensorflow as tf;tf.test.gpu_device_name()"
+#  tags:
+#    - docker-gpu0
+#
+#test:run_on_gpu1:
+#  image: tensorflow/tensorflow:latest-gpu
+#  stage: test
+#  script:
+#    - echo NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES}
+#    - echo NVIDIA_DRIVER_CAPABILITIES=${NVIDIA_DRIVER_CAPABILITIES}
+#    - nvidia-smi
+#    - python -c "import tensorflow as tf;tf.test.gpu_device_name()"
+#  tags:
+#    - docker-gpu1
+
+test:run_on_gpus:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev2"
+  script:
+    - echo NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES}
+    - echo NVIDIA_DRIVER_CAPABILITIES=${NVIDIA_DRIVER_CAPABILITIES}
+    - nvidia-smi
+  tags:
+    - docker-gpus

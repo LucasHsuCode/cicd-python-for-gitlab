@@ -2,6 +2,7 @@
 unit test example
 """
 import pytest
+from examples.example import aaa
 
 
 @pytest.fixture
@@ -64,3 +65,9 @@ def test_order_and_g(order_g, order):
     """test_order_and_g
     """
     assert order == ["a", "b", "c", "d", "e", "f", "g"]
+
+
+def test_aaa():
+    """test_aaa
+    """
+    assert aaa() == 3
