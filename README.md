@@ -39,10 +39,12 @@ This is a template project for python.
 2. Install the Docker image and start the container
     ```bash
     $ export DOCKER_NAME="gitlab-runner"
-    $ docker volume create gitlab-runner-config
+    $ export DOCKER_VOL="gitlab-runner-config"
+    $ docker volume create $DOCKER_VOL
     $ docker run -d --name $DOCKER_NAME --restart always \
         -v /var/run/docker.sock:/var/run/docker.sock \
-        -v gitlab-runner-config:/etc/gitlab-runner \
+        -v $DOCKER_VOL:/etc/gitlab-runner \
+        -v /Cache:/Cache \
         gitlab/gitlab-runner:latest
     ```
 3. Obtain URL (`GITLAB_URL`) and registration token (`GITLAB_TOKEN`)
@@ -54,9 +56,9 @@ This is a template project for python.
       ```bash
       $ export GITLAB_URL="https://cri-gitlab.cri.lab/"
       $ export GITLAB_TOKEN="GR1348941vx8VF3qbFWX9xLdscFJL"
-      $ export RUNNER_NAME="docker213"
+      $ export RUNNER_NAME="docker-213"
       $ docker exec -it $DOCKER_NAME gitlab-runner register -n --docker-privileged \
-          --url $GITLAB_URL \
+          --url $GITLAB_URL --clone-url $GITLAB_URL \
           --registration-token $GITLAB_TOKEN \
           --executor docker \
           --config /etc/gitlab-runner/config.toml \
@@ -64,7 +66,27 @@ This is a template project for python.
           --docker-image "docker:latest" \
           --tag-list "docker" \
           --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
-          --docker-disable-cache=true 
+          --docker-volumes /Cache:/Cache
+      ```
+    - Register runner with GPU
+      > --docker-gpus ["all", device=0, device=1, ...]
+      ```bash
+      $ export RUNNER_NAME="docker-gpus-213"
+      $ docker exec -it $DOCKER_NAME gitlab-runner register -n --docker-privileged \
+          --url $GITLAB_URL --clone-url $GITLAB_URL \
+          --registration-token $GITLAB_TOKEN \
+          --executor docker \
+          --config /etc/gitlab-runner/config.toml \
+          --description $RUNNER_NAME \
+          --docker-image "nvidia/cuda:12.0.0-base-ubuntu20.04" \
+          --tag-list "docker-gpus" \
+          --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
+          --docker-volumes /Cache:/Cache \
+          --docker-shm-size 2147483648 --docker-gpus "all" 
+      ```
+    - Check `config.toml` of GitLab runner
+      ```bash
+      $ docker exec -it $DOCKER_NAME cat /etc/gitlab-runner/config.toml
       ```
     - Deregister a Runner
       ```bash
@@ -98,10 +120,10 @@ Reference
 >
 > - Error 1
 > 
-> > ERROR: Registering runner... failed runner=GR1348941vx8VF3qb status=couldn't execute POST
-> > against https://cri-gitlab.cri.lab/api/v4/runners: Post "https://cri-gitlab.cri.lab/api/v4/runners": x509:
-> > certificate is valid for synology, not cri-gitlab.cri.lab  
-> > PANIC: Failed to register the runner.
+>   > ERROR: Registering runner... failed runner=GR1348941vx8VF3qb status=couldn't execute POST
+>   > against https://cri-gitlab.cri.lab/api/v4/runners: Post "https://cri-gitlab.cri.lab/api/v4/runners": x509:
+>   > certificate is valid for synology, not cri-gitlab.cri.lab  
+>   > PANIC: Failed to register the runner.
 >
 >   Replacing `https` with `http` solves the problem.
 >
@@ -135,7 +157,7 @@ Reference
 >   $
 >   $ # Register your runner
 >   $ docker exec -it $DOCKER_NAME gitlab-runner register -n --docker-privileged \
->         --url $GITLAB_URL \
+>         --url $GITLAB_URL --clone-url $GITLAB_URL \
 >         --registration-token $GITLAB_TOKEN \
 >         --tls-ca-file $CERTIFICATE \
 >         --executor docker \
@@ -144,7 +166,7 @@ Reference
 >         --docker-image "docker:latest" \
 >         --tag-list "docker" \
 >         --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
->         --docker-disable-cache=true 
+>         --docker-volumes /Cache:/Cache 
 >   ``` 
 >
 > Reference:
@@ -171,6 +193,8 @@ Reference
    $ pylint --load-plugins pylint_pytest tests/
    ```
 
+- Modified **".pylintrc"** can adjust coding style format for `pylint`
+
 ## Unit Tests
 
 ```bash
@@ -184,10 +208,12 @@ $ pytest tests/tests.py --doctest-modules --cov=. --cov-report=xml --cov-report=
 - [x] Create GitLab runner
 - [x] Add `CI/CD`
 - [ ] Create `docker` environment
-- [x] Build coding style checker for python
-- [x] Build unit tests for CI/CD
-- [ ] Add coding style checker in `CI/CD`
-- [ ] Add unit tests in `CI/CD`
+- [ ] Create `conda` environment
+- [x] Add coding style checker
+- [x] Add unit tests
+- [X] Set coding style checker in `CI/CD`
+- [X] Set unit tests in `CI/CD`
+- [X] Add GPU inference in `CI/CD`
 
 [Top](#cicd-python-for-gitlab)
 
