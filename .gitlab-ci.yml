@@ -3,6 +3,9 @@ stages:
   - deploy
   - test
 
+variables:
+  CI_SERVER_URL: http://cri-gitlab.cri.lab
+
 dev-build:
   image: ${DOCKER_IMAGE}
   tags:
@@ -30,18 +33,24 @@ dev-build:
     paths:
       - htmlcov/
     expire_in: 1 week
+  retry: 2
   parallel:
     matrix:
       - DOCKER_IMAGE: [ "python:3.7", "python:3.8", "python:3.9", "python:3.10"]
 
-dev-deploy:
+dev-release:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
   tags:
     - "docker"
   stage: deploy
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev2"
   script:
-    - echo "dev deploy"
+    - echo "running dev-release for {$CI_PIPELINE_IID}"
+  release: # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
+    tag_name: 'dev-$CI_PIPELINE_IID'
+    description: 'dev-$CI_PIPELINE_IID'
+    ref: '$CI_COMMIT_SHA'
 
 dev-test:
   tags:
@@ -52,14 +61,19 @@ dev-test:
   script:
     - echo "dev testing"
 
-release:
+main-release:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
   tags:
     - "docker"
   stage: deploy
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "dev2" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
   script:
-    - echo "main release"
+    - echo "running main-release for {$CI_PIPELINE_IID}"
+  release: # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
+    tag_name: 'release-$CI_PIPELINE_IID'                # The version is incremented per pipeline.
+    description: 'release-$CI_PIPELINE_IID'
+    ref: '$CI_COMMIT_SHA'                          # The tag is created from the pipeline SHA.
 
 #test:run_on_gpu0:
 #  image: tensorflow/tensorflow:latest-gpu
