@@ -1,6 +1,8 @@
 # CICD Python for GitLab
 
 ![Gitlab_WorkFlow](pic/gitlab_workflow_example.png)
+<img src="pic/gitlab_workflow_example_extended.png" alt="My Image" width="400"/>
+
 This is a template project for python.
 
 - [Project Branch Architecture](#project-branch-architecture)
