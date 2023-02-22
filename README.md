@@ -1,7 +1,7 @@
 # CICD Python for GitLab
 
-![Gitlab_WorkFlow](pic/gitlab_workflow_example.png)
-<img src="pic/gitlab_workflow_example_extended.png" alt="My Image" width="400"/>
+<img src="pic/gitlab_workflow_example.png" alt="My Image" width="800"/>
+<img src="pic/gitlab_workflow_example2.png" alt="My Image" width="800"/>
 
 This is a template project for python.
 
