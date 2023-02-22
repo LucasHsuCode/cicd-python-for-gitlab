@@ -3,6 +3,7 @@
 <img src="pic/gitlab_workflow_example.png" alt="My Image" width="800"/>
 <img src="pic/gitlab_workflow_example2.png" alt="My Image" width="800"/>
 
+[圖片來源]: https://docs.gitlab.com/ee/ci/introduction/
 This is a template project for python.
 
 - [Project Branch Architecture](#project-branch-architecture)
