@@ -1,5 +1,6 @@
 # CICD Python for GitLab
 
+![Gitlab_WorkFlow](pic/gitlab_workflow_example.png)
 This is a template project for python.
 
 - [Project Branch Architecture](#project-branch-architecture)
