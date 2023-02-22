@@ -340,15 +340,22 @@ Docker Volume 可以被視為一個磁碟區，用來儲存容器中的資料。
 [Create Docker Registry Server](#create-docker-registry-server)
 ```bash
 $ docker run -d --name $REGISTRY_SERVER_NAME --restart always -p 5000:5000 -v $DOCKER_VOL:/var/lib/registry registry:2
-
-這個指令是在運行 Docker 容器，並啟動一個名為 $REGISTRY_SERVER_NAME 的 Docker 容器，它的映像是 registry:2。下面是指令中使用的各個選項的詳細說明：
--d ：運行 Docker 容器的模式，此選項表示以“分離模式”運行，也就是在背景運行容器。
---name $REGISTRY_SERVER_NAME ：容器的名稱，即為環境變數 $REGISTRY_SERVER_NAME 的值。
---restart always ：表示當 Docker 容器停止運行時，自動重啟容器。
--p 5000:5000 ：表示將容器內部的 5000 端口映射到主機上的 5000 端口。
--v $DOCKER_VOL:/var/lib/registry ：表示將環境變數 $DOCKER_VOL 指定的卷掛載到容器內的 /var/lib/registry 目錄下，卷是 Docker 中一個常用的特性，可以用來在容器和主機之間共享數據。
-registry:2 ：表示 Docker Hub 上的 registry 映像，並且是 registry 的版本號為 2 的版本。
-總體而言，這個指令的作用是在本地機器上運行一個 Docker 容器，並在其中運行 Docker Registry 服務，使得本地機器可以作為私有的 Docker 映像倉庫，方便映像的存儲和分享。
+```
+> 這個指令是在運行 Docker 容器，並啟動一個名為 $REGISTRY_SERVER_NAME 的 Docker 容器，它的映像是 registry:2。下面是指令中使用的各個選項的詳細說明：
+>
+> > -d ：運行 Docker 容器的模式，此選項表示以“分離模式”運行，也就是在背景運行容器。
+> >
+> > --name $REGISTRY_SERVER_NAME ：容器的名稱，即為環境變數 $REGISTRY_SERVER_NAME 的值。
+> >
+> >--restart always ：表示當 Docker 容器停止運行時，自動重啟容器。
+> >
+> > -p 5000:5000 ：表示將容器內部的 5000 端口映射到主機上的 5000 端口。
+> >
+> >-v $DOCKER_VOL:/var/lib/registry ：表示將環境變數 $DOCKER_VOL 指定的卷掛載到容器內的 /var/lib/registry 目錄下，卷是 Docker 中一個常用的特性，可以用來在容器和主機之間共享數據。
+> >
+> > registry:2 ：表示 Docker Hub 上的 registry 映像，並且是 registry 的版本號為 2 的版本。
+>
+>總體而言，這個指令的作用是在本地機器上運行一個 Docker 容器，並在其中運行 Docker Registry 服務，使得本地機器可以作為私有的 Docker 映像倉庫，方便映像的存儲和分享。
 
 當Docker在本機找不到指定的鏡像時，會嘗試在Docker官方鏡像庫（Docker Hub）上下載該鏡像。因此，當您運行 docker run 命令時，如果 Docker 在本地找不到鏡像，它會從 Docker Hub 上下載相應的鏡像。
 在您的情況下，Docker Hub 上有 registry:2 鏡像，因此當您運行 docker run registry:2 命令時，Docker 會從 Docker Hub 下載 registry:2 鏡像。下載完成後，該鏡像會被保存在本地Docker中。
